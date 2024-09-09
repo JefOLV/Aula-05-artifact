@@ -5,7 +5,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: '*/15 * * * 1-6'  # A cada 15 minutos de segunda a sábado
+    - cron: '*/15 * * * 1-6'
 
 env:
   FILE_NAME: hello-server
@@ -15,10 +15,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
- - name: Build para Linux
-  run: go build -o hello-server ${{ env.FILE_NAME }}.go
+    - name: Verificar versão do Go
+      run: go version
+    - name: Build para Linux
+      run: go build -o ${{ env.FILE_NAME }} ${{ env.FILE_NAME }}.go
     - name: Build para Windows
-      run: GOOS=windows GOARCH=amd64 go build ${{ env.FILE_NAME }}.go
+      run: GOOS=windows GOARCH=amd64 go build -o ${{ env.FILE_NAME }}.exe ${{ env.FILE_NAME }}.go
     - name: Upload Linux Artifact
       uses: actions/upload-artifact@v2
       with:
@@ -39,6 +41,8 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: linux
+    - name: Permissão de execução
+      run: chmod +x ./hello-server
     - name: Run Script
       run: source ./run.sh
 
