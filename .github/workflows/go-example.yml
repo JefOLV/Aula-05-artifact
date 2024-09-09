@@ -15,8 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Build para Linux
-      run: go build ${{ env.FILE_NAME }}.go
+ - name: Build para Linux
+  run: go build -o hello-server ${{ env.FILE_NAME }}.go
     - name: Build para Windows
       run: GOOS=windows GOARCH=amd64 go build ${{ env.FILE_NAME }}.go
     - name: Upload Linux Artifact
