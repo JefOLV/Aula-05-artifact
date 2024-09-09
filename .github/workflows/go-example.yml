@@ -1,0 +1,53 @@
+name: Go CI
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '*/15 * * * 1-6'  # A cada 15 minutos de segunda a sábado
+
+env:
+  FILE_NAME: hello-server
+
+jobs:
+  build-go:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build para Linux
+      run: go build ${{ env.FILE_NAME }}.go
+    - name: Build para Windows
+      run: GOOS=windows GOARCH=amd64 go build ${{ env.FILE_NAME }}.go
+    - name: Upload Linux Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: linux
+        path: ./${{ env.FILE_NAME }}
+    - name: Upload Windows Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: windows
+        path: ./${{ env.FILE_NAME }}.exe
+
+  download-and-run-linux:
+    needs: build-go
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Download Linux Artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: linux
+    - name: Run Script
+      run: source ./run.sh
+
+  download-only-windows:
+    needs: build-go
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Download Windows Artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: windows
