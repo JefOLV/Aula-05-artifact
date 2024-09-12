@@ -22,12 +22,12 @@ jobs:
     - name: Build para Windows
       run: GOOS=windows GOARCH=amd64 go build -o ${{ env.FILE_NAME }}.exe ${{ env.FILE_NAME }}.go
     - name: Upload Linux Artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3  # Atualizado para v3
       with:
         name: linux
         path: ./${{ env.FILE_NAME }}
     - name: Upload Windows Artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3  # Atualizado para v3
       with:
         name: windows
         path: ./${{ env.FILE_NAME }}.exe
@@ -38,7 +38,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Download Linux Artifact
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3  # Atualizado para v3
       with:
         name: linux
     - name: Permissão de execução
@@ -52,6 +52,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Download Windows Artifact
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3  # Atualizado para v3
       with:
         name: windows
